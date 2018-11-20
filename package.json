@@ -1,0 +1,67 @@
+{
+  "name": "cli-app-boilerplate",
+  "version": "1.0.0",
+  "description": "My personal boilerplate for cli apps",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint src",
+    "build": "gulp build",
+    "prepublish": "gulp build"
+  },
+  "keywords": [
+    "cli",
+    "boilerplate"
+  ],
+  "author": {
+    "name": "Oussama Barkouki",
+    "email": "oussama1598@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oussama1598/cli-app-boilerplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oussama1598/cli-app-boilerplate/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "bin": "dist/index.js"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.44",
+    "@babel/polyfill": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/register": "^7.0.0-beta.44",
+    "babel-eslint": "^8.2.2",
+    "del": "^3.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0-beta.2",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-remove-code": "^2.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "run-sequence": "^2.2.1"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.44",
+    "app-module-path": "^2.2.0",
+    "better-queue": "^3.8.10",
+    "commander": "^2.15.1",
+    "csv-parse": "^4.0.1",
+    "filepick": "0.0.1",
+    "flavors": "^3.3.1",
+    "inquirer": "^6.2.0",
+    "lokijs": "^1.5.5",
+    "nodemailer": "^4.6.8",
+    "serialize-error": "^3.0.0",
+    "winston": "^3.1.0"
+  }
+}
