@@ -62,7 +62,7 @@ export default async function main(nonResolvedCsvURI) {
     mailQueue.setMessageOptions(from, subject);
     mailQueue.setMessageHtml(fs.readFileSync(config.messageOptions.html));
 
-    await mailQueue.addEmail('oussama1598@gmail.com');
+    await mailQueue.loadFromCsv(csvURI);
 
     mailQueue.start();
   } catch (e) {
