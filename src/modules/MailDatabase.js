@@ -8,6 +8,7 @@ export default class MailDatabase extends EventEmitter {
     super();
 
     this.db = new Loki(databaseURI, {
+      autosave: true,
       autoload: true,
       autoloadCallback: this.databaseReady.bind(this)
     });
@@ -36,8 +37,6 @@ export default class MailDatabase extends EventEmitter {
       sent: false
     });
 
-    await this.saveDatabase();
-
     return true;
   }
 
@@ -45,8 +44,6 @@ export default class MailDatabase extends EventEmitter {
     this.emails.findAndRemove({
       email
     });
-
-    return this.saveDatabase();
   }
 
   getExecededTriesEmails(tries) {
@@ -75,8 +72,6 @@ export default class MailDatabase extends EventEmitter {
     if (!sent) result.tries += 1;
 
     this.emails.update(result);
-
-    return this.saveDatabase();
   }
 
   clearDatabase() {

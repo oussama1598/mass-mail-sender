@@ -192,6 +192,10 @@ export default class MailQueue extends EventEmitter {
     /* eslint-enable no-restricted-syntax, no-await-in-loop */
   }
 
+  saveDatabase() {
+    this.mailDatabase.saveDatabase();
+  }
+
   clearDatabase() {
     this.mailDatabase.clearDatabase();
   }
@@ -208,7 +212,10 @@ export default class MailQueue extends EventEmitter {
     const stats = this.getStats();
 
     if(stats.totalItems > 0) this.emit('info', `Sending ${stats.totalItems} email(s)`);
-    else this.emit('info', 'Nothing to send, the queue is empty');
+    else {
+      this.emit('info', 'Nothing to send, the queue is empty');
+      this.emit('queue_done', this.getStats());
+    }
 
     this.resume();
   }

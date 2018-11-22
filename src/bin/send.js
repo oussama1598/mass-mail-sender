@@ -10,6 +10,15 @@ import {
 
 // TODO: add clear database command
 
+async function handleExit(logger, mailQueueInstance) {
+  logger.info('Closing...');
+  logger.info('Saving database');
+  await mailQueueInstance.saveDatabase();
+  logger.info('Database saved');
+
+  setTimeout(() => process.exit(), 5000);
+}
+
 export default async function main(nonResolvedCsvURI) {
   const csvURI = path.resolve(process.cwd(), nonResolvedCsvURI);
 
@@ -24,8 +33,8 @@ export default async function main(nonResolvedCsvURI) {
   const logger = loggerService(log, infoLoggingPath);
   const consoleLogger = loggerService(false);
 
-  if(!fs.existsSync(csvURI)) return logger.error(`The provided csv file does not exist, ${csvURI}`);
-  if(!fs.existsSync(config.messageOptions.html)) return logger.error(`The html file provided does not exist, ${config.messageOptions.html}`);
+  if (!fs.existsSync(csvURI)) return logger.error(`The provided csv file does not exist, ${csvURI}`);
+  if (!fs.existsSync(config.messageOptions.html)) return logger.error(`The html file provided does not exist, ${config.messageOptions.html}`);
 
   try {
     const mailQueue = new MailQueue({
@@ -33,8 +42,13 @@ export default async function main(nonResolvedCsvURI) {
       databaseURI: config.databaseURI,
     });
 
+    process.on('SIGINT', async () => handleExit(logger, mailQueue));
+    process.on('SIGUSR1', async () => handleExit(logger, mailQueue));
+    process.on('SIGUSR2', async () => handleExit(logger, mailQueue));
+    process.on('uncaughtException', () => logger.error(`Something went wrong, fullError: ${JSON.stringify(serializeError(e))}`));
+
     mailQueue.on('info', message => {
-      if(message.includes('console: ')) return consoleLogger.info(message.replace('console: ', ''));
+      if (message.includes('console: ')) return consoleLogger.info(message.replace('console: ', ''));
 
       return logger.info(message);
     });
@@ -44,9 +58,12 @@ export default async function main(nonResolvedCsvURI) {
       consoleLogger.info(`${stats.total} sent`);
     })
 
-    mailQueue.on('queue_done', stats => {
-      if(stats.totalItems === 0) consoleLogger.info('The queue got emptied.');
-    })
+    mailQueue.on('queue_done', async stats => {
+      if (stats.totalItems === 0){
+        consoleLogger.info('The queue got emptied.');
+        await handleExit(logger, mailQueue);
+      }
+    });
 
     await mailQueue.initialize();
 

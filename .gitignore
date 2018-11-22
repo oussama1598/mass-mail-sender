@@ -66,3 +66,5 @@ typings/
 
 # Config file
 src/config/config.json
+
+database.json
